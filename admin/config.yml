@@ -1,0 +1,31 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "images/uploads"
+
+collections:
+  - name: "products"
+    label: "产品"
+    folder: "content/products"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "产品名称", name: "title", widget: "string"}
+      - {label: "产品分类", name: "category", widget: "select", options: ["滑雪板", "滑雪服", "滑雪配件", "护具"]}
+      - {label: "价格", name: "price", widget: "number"}
+      - {label: "产品图片", name: "image", widget: "image"}
+      - {label: "产品描述", name: "description", widget: "text"}
+      - {label: "产品详情", name: "body", widget: "markdown"}
+      - {label: "上架状态", name: "available", widget: "boolean", default: true}
+
+  - name: "pages"
+    label: "页面"
+    files:
+      - label: "首页"
+        name: "home"
+        file: "index.html"
+        fields:
+          - {label: "标题", name: "title", widget: "string"}
+          - {label: "Banner图片", name: "banner", widget: "image"}

@@ -1,0 +1,53 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "title": "COSONE 全能滑雪板 Pro",
+      "category": "滑雪板",
+      "price": 2999,
+      "image": "images/products/snowboard-pro.jpg",
+      "description": "专业级全能滑雪板，适合各种雪况"
+    },
+    {
+      "id": 2,
+      "title": "COSONE 刻滑板 Carbon",
+      "category": "滑雪板",
+      "price": 3599,
+      "image": "images/products/snowboard-carve.jpg",
+      "description": "极致刻滑体验，硬雪道利器"
+    },
+    {
+      "id": 3,
+      "title": "COSONE 粉雪板 Powder",
+      "category": "滑雪板",
+      "price": 3299,
+      "image": "images/products/snowboard-powder.jpg",
+      "description": "大板头设计，深粉雪也能轻松应对"
+    },
+    {
+      "id": 4,
+      "title": "COSONE 专业滑雪服",
+      "category": "滑雪服",
+      "price": 1299,
+      "image": "images/products/jacket-pro.jpg",
+      "description": "20K防水透气，保暖舒适"
+    },
+    {
+      "id": 5,
+      "title": "COSONE 滑雪头盔",
+      "category": "护具",
+      "price": 599,
+      "image": "images/products/helmet.jpg",
+      "description": "MIPS防护系统，轻量化设计"
+    },
+    {
+      "id": 6,
+      "title": "COSONE 滑雪镜",
+      "category": "滑雪配件",
+      "price": 399,
+      "image": "images/products/goggles.jpg",
+      "description": "磁吸换片，防雾镀膜"
+    }
+  ],
+  "categories": ["全部", "滑雪板", "滑雪服", "滑雪配件", "护具"]
+}

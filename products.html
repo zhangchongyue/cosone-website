@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品中心 - COSONE</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .products-section { padding: 60px 0; background: #f8f9fa; }
+        .products-header { text-align: center; margin-bottom: 40px; }
+        .products-header h1 { font-size: 36px; margin-bottom: 10px; }
+        .products-header p { color: #666; }
+        
+        .filter-bar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 25px;
+            border: 2px solid #333;
+            background: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: #333;
+            color: #fff;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+        .product-info { padding: 20px; }
+        .product-category {
+            color: #999;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .product-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .product-desc {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .product-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #e74c3c;
+        }
+        .product-price::before { content: "¥"; font-size: 14px; }
+        .add-cart-btn {
+            padding: 8px 20px;
+            background: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        .add-cart-btn:hover { background: #555; }
+        
+        .no-products {
+            text-align: center;
+            padding: 60px;
+            color: #999;
+            grid-column: 1 / -1;
+        }
+        
+        /* 管理入口 */
+        .admin-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部公告栏 -->
+    <div class="announcement-bar">
+        <p>全场满999包邮 | 新用户注册立享9折优惠</p>
+    </div>
+
+    <!-- 导航栏 -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <ul class="nav-menu left">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="products.html" class="active">产品中心</a></li>
+                    <li><a href="#">品牌故事</a></li>
+                </ul>
+                <a href="index.html" class="logo">
+                    <span class="logo-text">COSONE</span>
+                </a>
+                <ul class="nav-menu right">
+                    <li><a href="#" class="icon-link"><span class="icon">🔍</span></a></li>
+                    <li><a href="#" class="icon-link"><span class="icon">👤</span></a></li>
+                    <li><a href="#" class="icon-link"><span class="icon">🛒</span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 产品区域 -->
+    <section class="products-section">
+        <div class="products-header">
+            <h1>产品中心</h1>
+            <p>专业单板滑雪装备，陪伴你征服每一座雪山</p>
+        </div>
+        
+        <!-- 分类筛选 -->
+        <div class="filter-bar" id="filterBar">
+            <!-- 分类按钮由JS动态生成 -->
+        </div>
+        
+        <!-- 产品网格 -->
+        <div class="products-grid" id="productsGrid">
+            <!-- 产品卡片由JS动态生成 -->
+        </div>
+    </section>
+
+    <!-- 管理入口 -->
+    <a href="admin/" class="admin-link" target="_blank">📝 内容管理</a>
+
+    <script>
+        // 产品数据
+        let productsData = [];
+        let categories = ["全部"];
+        let currentFilter = "全部";
+        
+        // 加载产品数据
+        async function loadProducts() {
+            try {
+                const response = await fetch('data/products.json');
+                const data = await response.json();
+                productsData = data.products;
+                categories = data.categories || ["全部", "滑雪板", "滑雪服", "滑雪配件", "护具"];
+                initFilter();
+                renderProducts();
+            } catch (error) {
+                console.error('加载产品失败:', error);
+                document.getElementById('productsGrid').innerHTML = '
+                    <div class="no-products">加载失败，请刷新重试</div>
+                ';
+            }
+        }
+        
+        // 初始化分类筛选
+        function initFilter() {
+            const filterBar = document.getElementById('filterBar');
+            filterBar.innerHTML = categories.map(cat => `
+                <button class="filter-btn ${cat === '全部' ? 'active' : ''}" data-category="${cat}">
+                    ${cat}
+                </button>
+            `).join('');
+            
+            // 绑定点击事件
+            filterBar.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBar.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.dataset.category;
+                    renderProducts();
+                });
+            });
+        }
+        
+        // 渲染产品
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            const filtered = currentFilter === '全部' 
+                ? productsData 
+                : productsData.filter(p => p.category === currentFilter);
+            
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="no-products">该分类暂无产品</div>';
+                return;
+            }
+            
+            grid.innerHTML = filtered.map(product => `
+                <div class="product-card" data-category="${product.category}">
+                    <img src="${product.image}" alt="${product.title}" class="product-image" 
+                         onerror="this.src='https://via.placeholder.com/300x250?text=COSONE'">
+                    <div class="product-info">
+                        <div class="product-category">${product.category}</div>
+                        <h3 class="product-title">${product.title}</h3>
+                        <p class="product-desc">${product.description}</p>
+                        <div class="product-footer">
+                            <span class="product-price">${product.price}</span>
+                            <button class="add-cart-btn">加入购物车</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // 初始化
+        loadProducts();
+    </script>
+</body>
+</html>
